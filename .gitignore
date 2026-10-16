@@ -1,0 +1,9 @@
+node_modules/
+.npm-cache/
+dist/
+.sites-runtime/
+.site-workflow/
+*.tsbuildinfo
+*.tar.gz
+qa/
+.openai/
