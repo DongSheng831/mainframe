@@ -26,8 +26,9 @@ The build type-checks the application and outputs the static site to `dist/`.
 - The typewriter begins after 600 ms and reveals one character every 38 ms. Action pills begin their independent entrance after 400 ms.
 - The mobile menu supports keyboard focus, Escape to close, and automatic closure at the desktop breakpoint.
 - Copying the address announces actual success or an actionable failure. It never sends email automatically.
-- Fonts are loaded directly from the external URLs in the brief. Their availability depends on the external host.
-- The background is the user's supplied `Dreamina_ Create realistic talking avatars with AI avatar generator.mp4`, served locally as `public/media/mainframe-character-turn.mp4`. Its 1280×720 resolution and all 121 video frames are retained, with frequent keyframes and a fast-start container for responsive seeking; the unused audio is removed. The poster is extracted from its first frame. Mobile cropping is centered to keep the character visible.
+- The original fonts are bundled as local WOFF2 files with `font-display: swap`. Page rendering no longer waits for external font stylesheets; font attribution is retained in `src/assets/fonts/NOTICE.txt`.
+- The background is the user's supplied `Dreamina_ Create realistic talking avatars with AI avatar generator.mp4`, optimized as `public/media/mainframe-character-web.mp4`: 960×540, 24 fps, frequent keyframes and a fast-start container. It is 1,729,790 bytes, down from 4,996,796 bytes. The first-frame WebP poster is 74,776 bytes, down from a 190,157-byte JPEG, and is preloaded with high priority. Mobile cropping remains centered.
+- The cumulative mouse-scrubbing behavior and sensitivity are unchanged. These asset optimizations reduce transfer size and remove third-party runtime requests; they do not eliminate connectivity delays to GitHub Pages itself.
 
 ## GitHub Pages
 

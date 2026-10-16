@@ -4,8 +4,8 @@ import { Navbar } from './components/Navbar'
 import { useTypewriter } from './hooks/useTypewriter'
 import { useVideoScrub } from './hooks/useVideoScrub'
 
-const VIDEO_URL = `${import.meta.env.BASE_URL}media/mainframe-character-turn.mp4`
-const VIDEO_POSTER = `${import.meta.env.BASE_URL}media/mainframe-character-poster.jpg`
+const VIDEO_URL = `${import.meta.env.BASE_URL}media/mainframe-character-web.mp4`
+const VIDEO_POSTER = `${import.meta.env.BASE_URL}media/mainframe-character-poster.webp`
 const GREETING = 'Glad you stopped in. Good taste tends to find us. Now, what are we building?'
 
 export default function App() {
