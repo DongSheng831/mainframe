@@ -1,12 +1,11 @@
+const SENSITIVITY = 0.8
 const SEEK_EPSILON = 0.01
-// This clip faces forward at about 40% of its timeline.
-const FRONT_FACING_PROGRESS = 0.4
 
 type ScrubbableVideo = Pick<HTMLVideoElement, 'duration' | 'currentTime' | 'seeking'>
 
 /** Keeps one seek in flight; subsequent movement updates only the latest target. */
 export function createVideoScrubber(video: ScrubbableVideo) {
-  let pointerProgress = 0.5
+  let prevX: number | null = null
   let targetTime = video.currentTime || 0
   let seekInFlight = false
 
@@ -17,27 +16,26 @@ export function createVideoScrubber(video: ScrubbableVideo) {
     video.currentTime = targetTime
   }
 
-  function updateTarget() {
-    if (!Number.isFinite(video.duration) || video.duration <= 0) return
-    const clipProgress = pointerProgress <= 0.5
-      ? pointerProgress * 2 * FRONT_FACING_PROGRESS
-      : FRONT_FACING_PROGRESS + (pointerProgress - 0.5) * 2 * (1 - FRONT_FACING_PROGRESS)
-    targetTime = clipProgress * video.duration
-    flush()
-  }
-
   return {
     move(currentX: number, viewportWidth: number) {
-      if (!Number.isFinite(currentX) || !Number.isFinite(viewportWidth) || viewportWidth <= 0) return
-      pointerProgress = Math.max(0, Math.min(1, currentX / viewportWidth))
-      updateTarget()
+      const previous = prevX
+      prevX = currentX
+      if (previous === null || viewportWidth <= 0) return
+      if (!Number.isFinite(video.duration) || video.duration <= 0) return
+
+      const delta = currentX - previous
+      targetTime = Math.max(0, Math.min(
+        video.duration,
+        targetTime + (delta / viewportWidth) * SENSITIVITY * video.duration,
+      ))
+      flush()
     },
     seeked() {
       seekInFlight = false
       flush()
     },
-    ready() {
-      updateTarget()
+    resetPointer() {
+      prevX = null
     },
   }
 }

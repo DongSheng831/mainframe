@@ -7,24 +7,18 @@ export function useVideoScrub(videoRef: RefObject<HTMLVideoElement | null>) {
     const video = videoRef.current
     if (!video) return
     const scrubber = createVideoScrubber(video)
-    let pointerX: number | null = null
-    const onMouseMove = (event: MouseEvent) => {
-      pointerX = event.clientX
-      scrubber.move(pointerX, window.innerWidth)
-    }
+    const onMouseMove = (event: MouseEvent) => scrubber.move(event.clientX, window.innerWidth)
     const onSeeked = () => scrubber.seeked()
-    const onReady = () => scrubber.ready()
-    const onResize = () => scrubber.move(pointerX ?? window.innerWidth / 2, window.innerWidth)
+    const onLeave = () => scrubber.resetPointer()
 
     window.addEventListener('mousemove', onMouseMove, { passive: true })
-    window.addEventListener('resize', onResize)
-    video.addEventListener('loadedmetadata', onReady)
+    window.addEventListener('blur', onLeave)
+    document.documentElement.addEventListener('mouseleave', onLeave)
     video.addEventListener('seeked', onSeeked)
-    onReady()
     return () => {
       window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('resize', onResize)
-      video.removeEventListener('loadedmetadata', onReady)
+      window.removeEventListener('blur', onLeave)
+      document.documentElement.removeEventListener('mouseleave', onLeave)
       video.removeEventListener('seeked', onSeeked)
     }
   }, [videoRef])
